@@ -1,0 +1,31 @@
+name: "Build system config"
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Run commands and stuff
+      run: |
+        target_ref="${GITHUB_BASE_REF-main}"
+        echo "${target_ref}"
+        target_ref="origin/${target_ref/#refs\/heads\//}"
+        echo "${target_ref}"
+        if [[ $GITHUB_REF == "target/refs/main" ]]; then
+          # If triggered on main, compare with the previous commit
+          target_ref="$(git log  HEAD~1 -1 --format=format:"%H")"
+        fi
+        echo "${target_ref}"
+        echo -e "<details>\n" >> $GITHUB_STEP_SUMMARY
+        echo "**test123**" >> $GITHUB_STEP_SUMMARY 
+        echo "```"  >> $GITHUB_STEP_SUMMARY
+        echo "ABCajlkfds"
+        echo "```"  >> $GITHUB_STEP_SUMMARY
+        echo -e "\n\n</details>\n" >> $GITHUB_STEP_SUMMARY
